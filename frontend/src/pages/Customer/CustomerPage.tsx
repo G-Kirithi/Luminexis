@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useOrders } from '../../store/OrderContext';
 import FoodCatalog, { type Product } from '../POS/FoodCatalog';
-import { getProducts, submitComplaint, getComplaints, uploadComplaintPhoto } from '../../api';
+import { getProducts, getFranchises, submitComplaint, getComplaints, uploadComplaintPhoto } from '../../api';
 import type { OrderItem } from '../POS/OrderDetails';
 
 type Step = 'auth' | 'order' | 'payment' | 'reserve' | 'success';
 
 const CustomerPage = () => {
   const { orders, tables, reserveTable, addOrder, updateOrderTable, validateAndUseCoupon, generateCoupon } = useOrders();
+  
+  const [activeFranchise, setActiveFranchise] = useState<string | null>(sessionStorage.getItem('franchise_name'));
+  const [availableFranchises, setAvailableFranchises] = useState<any[]>([]);
   
   const [step, setStep] = useState<Step>('auth');
   
@@ -42,8 +45,19 @@ const CustomerPage = () => {
   const [complaints, setComplaints] = useState<any[]>([]);
   const [loadingComplaints, setLoadingComplaints] = useState(false);
 
+  // Fetch available franchises if not selected
+  useEffect(() => {
+    if (!activeFranchise) {
+      getFranchises()
+        .then(data => setAvailableFranchises(data))
+        .catch(err => console.error('Failed to load franchises:', err));
+    }
+  }, [activeFranchise]);
+
   // Fetch products from backend
   useEffect(() => {
+    if (!activeFranchise) return;
+    
     getProducts()
       .then((data: any[]) => {
         setProducts(data.map(p => ({
@@ -54,7 +68,12 @@ const CustomerPage = () => {
         })));
       })
       .catch(err => console.error('Failed to fetch products', err));
-  }, []);
+  }, [activeFranchise]);
+
+  const selectCustomerFranchise = (name: string) => {
+    sessionStorage.setItem('franchise_name', name);
+    setActiveFranchise(name);
+  };
 
   const fetchComplaints = () => {
     if (!customerPhone) return;
@@ -354,17 +373,67 @@ const CustomerPage = () => {
     }
   };
 
+  const handleChangeLocation = () => {
+    sessionStorage.removeItem('franchise_name');
+    setActiveFranchise(null);
+    handleLogout();
+  };
+
   const renderHeader = (title: string, subtitle: string) => (
-    <div className="flex justify-between items-center" style={{ marginBottom: '2rem' }}>
+    <div className="flex justify-between items-center" style={{ marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
       <div>
         <h1 style={{ margin: 0 }}>{title}</h1>
-        <span style={{ color: 'var(--text-muted)' }}>{subtitle}</span>
+        <span style={{ color: 'var(--text-muted)' }}>
+          Location: <strong style={{ color: 'var(--primary-color)', textTransform: 'capitalize' }}>{activeFranchise}</strong> | {subtitle}
+        </span>
       </div>
-      <button onClick={handleLogout} className="outline danger" style={{ padding: '0.5rem 1rem' }}>
-        Sign Out
-      </button>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <button onClick={handleChangeLocation} className="outline" style={{ padding: '0.5rem 1rem' }}>
+          🏢 Change Location
+        </button>
+        <button onClick={handleLogout} className="outline danger" style={{ padding: '0.5rem 1rem' }}>
+          Sign Out
+        </button>
+      </div>
     </div>
   );
+
+  if (!activeFranchise) {
+    return (
+      <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '1.5rem' }}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '0.5rem', background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Luminexis
+          </h1>
+          <p className="text-muted" style={{ fontSize: '1.1rem' }}>Please select a franchise location to order or request support</p>
+        </div>
+
+        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '600px', width: '100%' }}>
+          {availableFranchises.map(f => (
+            <div
+              key={f.id}
+              className="glass-card"
+              onClick={() => selectCustomerFranchise(f.name)}
+              style={{
+                padding: '2rem',
+                flex: '1 1 180px',
+                textAlign: 'center',
+                cursor: 'pointer',
+                border: '1px solid var(--surface-border)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏢</div>
+              <h3 style={{ margin: 0, textTransform: 'capitalize' }}>{f.name}</h3>
+            </div>
+          ))}
+          {availableFranchises.length === 0 && (
+            <p className="text-muted">Loading available locations...</p>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (step === 'auth') {
     return (

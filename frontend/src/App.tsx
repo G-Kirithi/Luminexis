@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { socket } from './socket';
 
@@ -9,6 +9,8 @@ import NewOrderPage from './pages/POS/NewOrderPage';
 import PaymentPage from './pages/POS/PaymentPage';
 import KitchenPanel from './pages/Kitchen/KitchenPanel';
 import CustomerPage from './pages/Customer/CustomerPage';
+import FranchiseSelector from './pages/FranchiseSelector';
+import SuperAdminPanel from './pages/SuperAdminPanel';
 import { OrderProvider, useOrders } from './store/OrderContext';
 import { getInventory, getComplaints, updateComplaintStatus } from './api';
 
@@ -699,13 +701,76 @@ const AdminDashboard = () => {
 
 const TopNav = () => {
   const location = useLocation();
-  if (location.pathname === '/' || location.pathname.startsWith('/customer')) return null;
+  const navigate = useNavigate();
+  const activeFranchise = sessionStorage.getItem('franchise_name');
+
+  if (
+    location.pathname === '/' ||
+    location.pathname === '/franchise-selector' ||
+    location.pathname === '/super-admin' ||
+    location.pathname.startsWith('/customer')
+  ) {
+    return null;
+  }
+
+  const handleSwitchFranchise = () => {
+    sessionStorage.removeItem('franchise_name');
+    navigate('/franchise-selector');
+  };
 
   return (
-    <nav style={{ padding: '1rem 2rem', display: 'flex', justifyContent: 'flex-end', background: 'rgba(0,0,0,0.2)', borderBottom: '1px solid var(--surface-border)' }}>
-      <Link to="/"><button className="outline" style={{ padding: '0.4rem 1rem' }}>Logout / Switch User</button></Link>
+    <nav style={{ 
+      padding: '1rem 2rem', 
+      display: 'flex', 
+      justifyContent: 'space-between', 
+      alignItems: 'center', 
+      background: 'rgba(0,0,0,0.2)', 
+      borderBottom: '1px solid var(--surface-border)' 
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Franchise:</span>
+        <span style={{ fontWeight: 'bold', color: 'var(--primary-color)', textTransform: 'capitalize' }}>
+          {activeFranchise || 'None'}
+        </span>
+      </div>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <button onClick={handleSwitchFranchise} className="outline" style={{ padding: '0.4rem 1rem' }}>
+          🏢 Switch Franchise
+        </button>
+        <Link to="/">
+          <button className="outline" style={{ padding: '0.4rem 1rem' }}>
+            Logout / Switch User
+          </button>
+        </Link>
+      </div>
     </nav>
   );
+};
+
+const FranchiseRedirectHandler = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if a franchise query parameter is passed in the URL (e.g. ?franchise=downtown)
+    const params = new URLSearchParams(location.search);
+    const urlFranchise = params.get('franchise');
+    if (urlFranchise) {
+      sessionStorage.setItem('franchise_name', urlFranchise);
+    }
+
+    // Customer pages handle their own franchise selection or bypass employee authentication
+    if (location.pathname.startsWith('/customer')) {
+      return;
+    }
+
+    const franchise = sessionStorage.getItem('franchise_name');
+    if (!franchise && location.pathname !== '/franchise-selector' && location.pathname !== '/super-admin') {
+      navigate('/franchise-selector');
+    }
+  }, [location.pathname, location.search, navigate]);
+
+  return null;
 };
 
 function App() {
@@ -720,12 +785,15 @@ function App() {
 
   return (
     <BrowserRouter>
+      <FranchiseRedirectHandler />
       <OrderProvider>
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
           <TopNav />
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <Routes>
               <Route path="/" element={<LoginSelection />} />
+              <Route path="/franchise-selector" element={<FranchiseSelector />} />
+              <Route path="/super-admin" element={<SuperAdminPanel />} />
               <Route path="/admin/*" element={<AdminDashboard />} />
               
               {/* POS Routes */}

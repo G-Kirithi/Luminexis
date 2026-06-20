@@ -222,4 +222,20 @@ class CustomerComplaintResponse(CustomerComplaintBase):
     class Config:
         orm_mode = True
 
+# --- Franchise ---
+class FranchiseBase(BaseModel):
+    name: str
+    pin: str
+
+class FranchiseCreate(FranchiseBase):
+    pass
+
+class FranchiseResponse(BaseModel):
+    id: int
+    name: str
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
 

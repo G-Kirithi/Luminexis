@@ -11,6 +11,10 @@ api.interceptors.request.use((config) => {
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  const franchiseName = sessionStorage.getItem('franchise_name');
+  if (franchiseName && config.headers) {
+    config.headers['X-Franchise-Name'] = franchiseName;
+  }
   return config;
 });
 
@@ -23,6 +27,13 @@ export const createOrder = (orderData: any) => api.post('/api/orders', orderData
 export const updateOrderStatus = (orderId: number, status: string) => api.put(`/api/orders/${orderId}/status?status=${status}`).then(res => res.data);
 export const signupCustomer = (data: any) => api.post('/api/customers/signup', data).then(res => res.data);
 export const loginCustomer = (data: any) => api.post('/api/customers/login', data).then(res => res.data);
+
+// --- Franchise API Helpers ---
+export const registerFranchise = (payload: { name: string; pin: string }) => api.post('/api/franchises', payload).then(res => res.data);
+export const loginFranchise = (payload: { name: string; pin: string }) => api.post('/api/franchises/login', payload).then(res => res.data);
+export const getFranchises = () => api.get('/api/franchises').then(res => res.data);
+export const getFranchiseStats = () => api.get('/api/franchises/stats').then(res => res.data);
+export const resetFranchiseDb = (name: string) => api.post(`/api/franchises/${name}/reset`).then(res => res.data);
 
 // --- Kitchen Inventory API Helpers ---
 export const getInventory = () => api.get('/api/inventory').then(res => res.data);

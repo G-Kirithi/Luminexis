@@ -2,15 +2,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import socketio
 
-from database import engine, Base
+from database import global_engine, Base
 import models
-from api import auth, products, tables, orders, customers, inventory, complaints
+from api import auth, products, tables, orders, customers, inventory, complaints, franchise
 from socket_server import sio
 from fastapi.staticfiles import StaticFiles
 import os
 
-# Create all tables in the database
-Base.metadata.create_all(bind=engine)
+# Create all global tables in the global database (cafe_pos_global)
+Base.metadata.create_all(bind=global_engine)
 
 app = FastAPI(title="Cafe POS Backend API")
 
@@ -25,6 +25,7 @@ app.include_router(orders.router, prefix="/api", tags=["orders"])
 app.include_router(customers.router, prefix="/api", tags=["customers"])
 app.include_router(inventory.router, prefix="/api", tags=["inventory"])
 app.include_router(complaints.router, prefix="/api", tags=["complaints"])
+app.include_router(franchise.router, prefix="/api", tags=["franchise"])
 
 # Configure CORS
 app.add_middleware(

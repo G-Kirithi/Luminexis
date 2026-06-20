@@ -176,3 +176,10 @@ class CustomerComplaint(Base):
     refund_amount = Column(Float, default=0.0)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+class Franchise(Base):
+    __tablename__ = "franchise"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    pin = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow)
+

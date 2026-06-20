@@ -1,11 +1,13 @@
 from database import SessionLocal, engine, Base
 import models
 
-# Ensure tables exist
-Base.metadata.create_all(bind=engine)
-
-def seed():
-    db = SessionLocal()
+def seed(db=None):
+    close_db = False
+    if db is None:
+        # Ensure tables exist for global engine if run directly
+        Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        close_db = True
 
     # ── 1. Categories ──────────────────────────────────────────────────────────
     def get_or_create_category(name, color):
@@ -98,7 +100,8 @@ def seed():
 
     db.commit()
     print(f"Database seeded successfully! Added {added} new products.")
-    db.close()
+    if close_db:
+        db.close()
 
 if __name__ == "__main__":
     seed()
