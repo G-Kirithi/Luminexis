@@ -7,10 +7,12 @@ export interface FullOrder {
   token_number: number;
   customer_name: string;
   customer_phone: string;
-  customer_id: string; // mapped from phone
+  customer_id: string;
   items: OrderItem[];
   total_bill: number;
   status: 'Pending' | 'Cooking' | 'Ready' | 'Completed';
+  payment_method?: 'Cash' | 'Card' | 'UPI';
+  chef_name?: string;
   created_at: string;
 }
 
@@ -23,26 +25,24 @@ interface Customer {
 interface OrderContextType {
   orders: FullOrder[];
   addOrder: (order: Omit<FullOrder, 'id' | 'order_id' | 'token_number' | 'status' | 'created_at' | 'customer_id'>) => void;
-  updateOrderStatus: (id: number, status: FullOrder['status']) => void;
+  updateOrderStatus: (id: number, status: FullOrder['status'], chef_name?: string) => void;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [orders, setOrders] = useState<FullOrder[]>([]);
-  const [customers, setCustomers] = useState<Record<string, Customer>>({}); // Phone -> Customer
+  const [customers, setCustomers] = useState<Record<string, Customer>>({});
 
   const addOrder = (orderData: Omit<FullOrder, 'id' | 'order_id' | 'token_number' | 'status' | 'created_at' | 'customer_id'>) => {
     const newId = Date.now();
     const orderNumber = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
     const token = orders.length > 0 ? Math.max(...orders.map(o => o.token_number)) + 1 : 1;
-    
-    // Resolve Customer ID
+
     let customerId = '';
     if (customers[orderData.customer_phone]) {
       customerId = customers[orderData.customer_phone].id;
     } else {
-      // New customer, generate ID
       customerId = `CUST-${Math.floor(10000 + Math.random() * 90000)}`;
       setCustomers(prev => ({
         ...prev,
@@ -67,8 +67,14 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setOrders(prev => [newOrder, ...prev]);
   };
 
-  const updateOrderStatus = (id: number, status: FullOrder['status']) => {
-    setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
+  const updateOrderStatus = (id: number, status: FullOrder['status'], chef_name?: string) => {
+    setOrders(prev =>
+      prev.map(o =>
+        o.id === id
+          ? { ...o, status, ...(chef_name !== undefined ? { chef_name } : {}) }
+          : o
+      )
+    );
   };
 
   return (

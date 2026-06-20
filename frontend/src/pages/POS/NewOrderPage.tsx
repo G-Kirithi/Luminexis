@@ -70,18 +70,18 @@ const NewOrderPage = () => {
       return;
     }
 
-    addOrder({
-      customer_name: customerName,
-      customer_phone: customerPhone,
-      items,
-      total_bill: totalBill
+    navigate('/pos/payment', {
+      state: {
+        customer_name: customerName,
+        customer_phone: customerPhone,
+        items,
+        total_bill: totalBill
+      }
     });
-
-    navigate('/pos'); // Go back to dashboard
   };
 
   return (
-    <div style={{ display: 'flex', gap: '1rem', padding: '1rem', height: 'calc(100vh - 4rem)' }}>
+    <div style={{ display: 'flex', gap: '1rem', padding: '1rem', minHeight: '100%', boxSizing: 'border-box' }}>
       {/* Left Form & Catalog */}
       <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div className="glass-card">
@@ -147,10 +147,10 @@ const NewOrderPage = () => {
             <span style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>${totalBill.toFixed(2)}</span>
           </div>
           <button 
-            style={{ width: '100%', padding: '1rem', fontSize: '1.2rem', background: 'var(--success-color)' }}
+            style={{ width: '100%', padding: '1rem', fontSize: '1.2rem', background: 'var(--primary-color)' }}
             onClick={handleSubmit}
           >
-            Place Order (Enter)
+            Proceed to Payment (Enter)
           </button>
         </div>
       </div>

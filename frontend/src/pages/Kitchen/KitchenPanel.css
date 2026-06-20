@@ -1,0 +1,620 @@
+/* ============================================
+   KITCHEN PANEL STYLES
+   ============================================ */
+
+/* Chef Selection Screen */
+.chef-selection-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  background: radial-gradient(ellipse at top, rgba(51, 154, 240, 0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at bottom, rgba(255, 107, 107, 0.05) 0%, transparent 60%);
+}
+
+.chef-selection-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.kitchen-logo {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+.chef-selection-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff 0%, #339af0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.5rem;
+  letter-spacing: -1px;
+}
+
+.chef-selection-subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Chef Grid */
+.chef-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  max-width: 520px;
+}
+
+.chef-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.4rem 1.8rem;
+  background: rgba(33, 37, 41, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: left;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.chef-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--chef-color, #339af0) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.chef-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--chef-color, #339af0);
+  box-shadow: 0 12px 40px var(--chef-glow, rgba(51,154,240,0.35)), 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.chef-card:hover::before {
+  opacity: 0.07;
+}
+
+.chef-card:active {
+  transform: scale(0.98);
+}
+
+.chef-avatar {
+  font-size: 2.8rem;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 50%;
+  border: 2px solid var(--chef-color, #339af0);
+  flex-shrink: 0;
+  box-shadow: 0 0 20px var(--chef-glow, rgba(51,154,240,0.2));
+  transition: box-shadow 0.3s;
+}
+
+.chef-card:hover .chef-avatar {
+  box-shadow: 0 0 30px var(--chef-glow, rgba(51,154,240,0.5));
+}
+
+.chef-info {
+  flex: 1;
+}
+
+.chef-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+
+.chef-role {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.chef-arrow {
+  font-size: 1.4rem;
+  color: var(--chef-color, #339af0);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.3s ease;
+}
+
+.chef-card:hover .chef-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ============================================
+   KITCHEN PANEL (Board View)
+   ============================================ */
+.kitchen-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: radial-gradient(ellipse at 20% 0%, rgba(252,196,25,0.05) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 100%, rgba(51,207,102,0.05) 0%, transparent 50%);
+}
+
+/* Top Bar */
+.kitchen-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.5rem;
+  background: rgba(15, 17, 21, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.kitchen-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.back-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-muted);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  box-shadow: none;
+}
+
+.back-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.active-chef {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.active-chef-emoji {
+  font-size: 1.8rem;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  border: 2px solid var(--chef-color, #339af0);
+}
+
+.active-chef-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.active-chef-role {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Stats */
+.kitchen-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 0.6rem 1.4rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.stat-num {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.1);
+}
+
+/* Live Indicator */
+.kitchen-live {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #51cf66;
+  letter-spacing: 2px;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: #51cf66;
+  border-radius: 50%;
+  animation: pulse-live 1.5s ease-in-out infinite;
+  box-shadow: 0 0 8px #51cf66;
+}
+
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* Board */
+.kitchen-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  flex: 1;
+  padding: 1rem;
+}
+
+/* Lane */
+.kitchen-lane {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,0.02);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.lane-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.9rem 1.2rem;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 2px solid;
+  flex-shrink: 0;
+}
+
+.lane-icon {
+  font-size: 1.2rem;
+}
+
+.lane-title {
+  font-weight: 700;
+  font-size: 1rem;
+  flex: 1;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.lane-count {
+  min-width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #000;
+  padding: 0 6px;
+}
+
+.lane-body {
+  flex: 1;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.lane-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  gap: 0.5rem;
+  padding: 2rem;
+  opacity: 0.5;
+  min-height: 120px;
+}
+
+.empty-icon {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+/* ============================================
+   ORDER TICKET
+   ============================================ */
+.order-ticket {
+  background: rgba(33, 37, 41, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  animation: ticket-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes ticket-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.order-ticket::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+}
+
+.order-ticket.pending::before  { background: #339af0; }
+.order-ticket.cooking::before  { background: #fcc419; }
+.order-ticket.ready::before    { background: #51cf66; }
+
+.order-ticket.urgent {
+  border-color: rgba(255, 107, 107, 0.4);
+  box-shadow: 0 0 16px rgba(255,107,107,0.15);
+}
+
+/* Ticket Header */
+.ticket-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.token-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 0.3rem 0.7rem;
+  min-width: 52px;
+}
+
+.token-label {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.token-number {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.ticket-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.ticket-order-id {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+/* Status Pill */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border: 1px solid currentColor;
+}
+
+/* Customer */
+.ticket-customer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+}
+
+.customer-icon {
+  font-size: 1rem;
+}
+
+.customer-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.customer-phone {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Items */
+.ticket-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ticket-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.ticket-item:last-child {
+  border-bottom: none;
+}
+
+.item-qty {
+  font-weight: 800;
+  color: #fcc419;
+  min-width: 28px;
+  font-size: 0.8rem;
+}
+
+.item-name {
+  flex: 1;
+  color: #fff;
+  font-weight: 500;
+}
+
+.item-price {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+/* Footer */
+.ticket-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.ticket-time {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.elapsed {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.elapsed.urgent-text {
+  color: #ff6b6b;
+  font-weight: 700;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.other-chef {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Action Buttons */
+.ticket-action {
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+.action-start {
+  background: rgba(252, 196, 25, 0.15);
+  color: #fcc419;
+  border: 1px solid rgba(252, 196, 25, 0.3);
+}
+
+.action-start:hover {
+  background: rgba(252, 196, 25, 0.25);
+  box-shadow: 0 0 16px rgba(252,196,25,0.3);
+  transform: translateY(-1px);
+}
+
+.action-ready {
+  background: rgba(81, 207, 102, 0.15);
+  color: #51cf66;
+  border: 1px solid rgba(81, 207, 102, 0.3);
+}
+
+.action-ready:hover {
+  background: rgba(81, 207, 102, 0.25);
+  box-shadow: 0 0 16px rgba(81,207,102,0.3);
+  transform: translateY(-1px);
+}
+
+/* Ready badge */
+.ready-badge {
+  background: rgba(81, 207, 102, 0.15);
+  color: #51cf66;
+  border: 1px solid rgba(81, 207, 102, 0.3);
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  animation: pulse-ready 2s ease-in-out infinite;
+}
+
+@keyframes pulse-ready {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(81,207,102,0.3); }
+  50%       { box-shadow: 0 0 0 6px rgba(81,207,102,0); }
+}
