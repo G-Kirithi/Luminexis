@@ -73,6 +73,7 @@ class ResPartner(Base): # CUSTOMER
     name = Column(String)
     email = Column(String, unique=True, index=True, nullable=True)
     phone = Column(String, nullable=True)
+    password = Column(String, nullable=True)
 
     orders = relationship("PosOrder", back_populates="partner")
 
@@ -94,16 +95,17 @@ class PosOrder(Base):
     __tablename__ = "pos_order"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True) # Order Number
-    session_id = Column(Integer, ForeignKey("pos_session.id"))
+    session_id = Column(Integer, ForeignKey("pos_session.id"), nullable=True)
     table_id = Column(Integer, ForeignKey("restaurant_table.id"), nullable=True)
     partner_id = Column(Integer, ForeignKey("res_partner.id"), nullable=True)
-    user_id = Column(Integer, ForeignKey("res_users.id"))
+    user_id = Column(Integer, ForeignKey("res_users.id"), nullable=True)
     date_order = Column(DateTime, default=datetime.utcnow)
     state = Column(String) # Draft/Paid/Cancelled
     amount_total = Column(Float, default=0.0)
     amount_tax = Column(Float, default=0.0)
     discount_amount = Column(Float, default=0.0)
     payment_method = Column(String, nullable=True)
+    generated_coupon = Column(String, nullable=True)
 
     session = relationship("PosSession", back_populates="orders")
     table = relationship("RestaurantTable", back_populates="orders", foreign_keys=[table_id])
@@ -149,3 +151,28 @@ class PosPaymentMethod(Base):
     name = Column(String) # Cash/Digital/UPI QR
     active = Column(Boolean, default=True)
     upi_id = Column(String, nullable=True)
+
+class KitchenInventory(Base):
+    __tablename__ = "kitchen_inventory"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    quantity = Column(Float, default=0.0)
+    unit = Column(String, nullable=True)
+    is_scarce = Column(Boolean, default=False)
+    expiry_date = Column(DateTime, nullable=True)
+    notes = Column(Text, nullable=True)
+    last_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class CustomerComplaint(Base):
+    __tablename__ = "customer_complaint"
+    id = Column(Integer, primary_key=True, index=True)
+    customer_phone = Column(String, index=True)
+    customer_name = Column(String)
+    message = Column(Text)
+    photo_url = Column(String, nullable=True)
+    is_refund_request = Column(Boolean, default=False)
+    order_id = Column(String, nullable=True)
+    refund_status = Column(String, default="Pending") # Pending / Approved / Rejected
+    refund_amount = Column(Float, default=0.0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+

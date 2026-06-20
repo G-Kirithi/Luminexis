@@ -1,28 +1,51 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FoodCatalog, { type Product } from './FoodCatalog';
 import type { OrderItem } from './OrderDetails';
 import { useOrders } from '../../store/OrderContext';
-
-const MOCK_PRODUCTS: Product[] = [
-  { id: 1, name: 'Classic Burger', category: 'Burger', price: 8.99 },
-  { id: 2, name: 'Cheese Burger', category: 'Burger', price: 9.99 },
-  { id: 3, name: 'Veggie Burger', category: 'Burger', price: 7.99 },
-  { id: 4, name: 'Cola', category: 'Drinks', price: 2.50 },
-  { id: 5, name: 'Lemonade', category: 'Drinks', price: 3.00 },
-  { id: 6, name: 'Chicken Wrap', category: 'Wraps', price: 6.50 },
-  { id: 7, name: 'Beef Wrap', category: 'Wraps', price: 7.50 },
-  { id: 8, name: 'Family Combo', category: 'Combo Meal', price: 24.99 },
-  { id: 9, name: 'Kids Combo', category: 'Combo Meal', price: 12.99 },
-];
+import { getProducts } from '../../api';
 
 const NewOrderPage = () => {
   const navigate = useNavigate();
-  const { addOrder } = useOrders();
+  const location = useLocation();
+  const { holdTable, freeTable } = useOrders();
+
+  const state = location.state as { table_number?: number } | null;
+  const selectedTable = state?.table_number;
+
+  const isProceeding = useRef(false);
+
+  useEffect(() => {
+    if (selectedTable) {
+      holdTable(selectedTable);
+    }
+    return () => {
+      // If we unmount and we didn't explicitly proceed to payment, release the hold
+      if (selectedTable && !isProceeding.current) {
+        freeTable(selectedTable);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTable]);
 
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [items, setItems] = useState<OrderItem[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  // Fetch products from backend
+  useEffect(() => {
+    getProducts()
+      .then((data: any[]) => {
+        setProducts(data.map(p => ({
+          id: p.id,
+          name: p.name,
+          category: p.category?.name || 'Other',
+          price: p.list_price,
+        })));
+      })
+      .catch(err => console.error('Failed to fetch products', err));
+  }, []);
 
   const totalBill = items.reduce((acc, item) => acc + (item.price * item.qty), 0);
 
@@ -70,12 +93,15 @@ const NewOrderPage = () => {
       return;
     }
 
+    isProceeding.current = true;
+
     navigate('/pos/payment', {
       state: {
         customer_name: customerName,
         customer_phone: customerPhone,
         items,
-        total_bill: totalBill
+        total_bill: totalBill,
+        table_number: selectedTable
       }
     });
   };
@@ -85,7 +111,14 @@ const NewOrderPage = () => {
       {/* Left Form & Catalog */}
       <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div className="glass-card">
-          <h2 style={{ marginBottom: '1rem' }}>Customer Details</h2>
+          <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
+            <h2 style={{ margin: 0 }}>Customer Details</h2>
+            {selectedTable && (
+              <span style={{ background: 'var(--primary-color)', color: '#fff', padding: '0.4rem 1rem', borderRadius: '20px', fontWeight: 'bold' }}>
+                Table {selectedTable}
+              </span>
+            )}
+          </div>
           <div style={{ display: 'flex', gap: '1rem' }}>
             <div style={{ flex: 1 }}>
               <label className="text-muted" style={{ display: 'block', marginBottom: '0.5rem' }}>Phone Number *</label>
@@ -110,7 +143,7 @@ const NewOrderPage = () => {
           </div>
         </div>
 
-        <FoodCatalog products={MOCK_PRODUCTS} onAddProduct={handleAddProduct} />
+        <FoodCatalog products={products} onAddProduct={handleAddProduct} />
       </div>
 
       {/* Right Sidebar - Order Summary */}

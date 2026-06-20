@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useOrders } from '../../store/OrderContext';
 import type { OrderItem } from './OrderDetails';
@@ -10,12 +10,13 @@ interface OrderState {
   customer_phone: string;
   items: OrderItem[];
   total_bill: number;
+  table_number?: number;
 }
 
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { addOrder } = useOrders();
+  const { addOrder, validateAndUseCoupon, generateCoupon, reserveTable } = useOrders();
 
   const state = location.state as OrderState | null;
 
@@ -24,34 +25,79 @@ const PaymentPage = () => {
     return null;
   }
 
-  const { customer_name, customer_phone, items, total_bill } = state;
+  const { customer_name, customer_phone, items, total_bill, table_number } = state;
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('Cash');
-  const [amountTendered, setAmountTendered] = useState<number | ''>(total_bill);
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
 
-  const changeDue = typeof amountTendered === 'number' ? Math.max(0, amountTendered - total_bill) : 0;
-  const isPaymentValid = paymentMethod !== 'Cash' || (typeof amountTendered === 'number' && amountTendered >= total_bill);
+  const finalTotal = total_bill - appliedDiscount;
+  const [amountTendered, setAmountTendered] = useState<number | ''>(finalTotal);
 
-  const handleComplete = () => {
+  const changeDue = typeof amountTendered === 'number' ? Math.max(0, amountTendered - finalTotal) : 0;
+  const isPaymentValid = paymentMethod !== 'Cash' || (typeof amountTendered === 'number' && amountTendered >= finalTotal);
+
+  const handleApplyCoupon = () => {
+    if (total_bill < 50) {
+      alert('Total bill must be $50 or more to use a coupon.');
+      return;
+    }
+    if (appliedDiscount > 0) {
+      alert('A coupon has already been applied.');
+      return;
+    }
+    const isValid = validateAndUseCoupon(couponInput.trim());
+    if (isValid) {
+      const discount = total_bill * 0.10;
+      setAppliedDiscount(discount);
+      setAmountTendered(total_bill - discount); // Update tendered default
+      alert('Coupon applied successfully! 10% discount.');
+    } else {
+      alert('Invalid or already used coupon code.');
+    }
+  };
+
+  const handleComplete = async () => {
     if (!isPaymentValid) {
       alert('Amount tendered must be equal to or greater than the total bill.');
       return;
     }
 
-    addOrder({
+    let newCode: string | undefined;
+    if (finalTotal >= 50) {
+      newCode = generateCoupon();
+    }
+
+    const orderId = await addOrder({
       customer_name,
       customer_phone,
       items,
-      total_bill,
+      total_bill: finalTotal,
       payment_method: paymentMethod,
+      generated_coupon: newCode,
+      table_number,
     });
+
+    if (orderId === 0) {
+      alert('Failed to save order. Please try again.');
+      return;
+    }
+
+    if (newCode) {
+      alert(`Payment Complete!\n\nGive this coupon code to the customer for their next purchase:\n\n${newCode}`);
+    } else {
+      alert('Payment Complete!');
+    }
+
+    if (table_number) {
+      reserveTable(table_number);
+    }
 
     navigate('/pos');
   };
 
   const handleCancel = () => {
-    navigate('/pos/new', { state }); // Go back preserving state if needed (NewOrderPage would need to read this state to populate, but for simplicity, we'll just go back and it will be empty)
-    // For now, let's just go back to /pos/new empty or let them use browser back.
+    navigate('/pos/new', { state }); 
   };
 
   return (
@@ -75,14 +121,48 @@ const PaymentPage = () => {
             ))}
           </div>
 
-          <div className="flex justify-between items-center" style={{ borderTop: '1px solid var(--surface-border)', paddingTop: '1rem' }}>
-            <span style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>Total Amount</span>
-            <span style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>${total_bill.toFixed(2)}</span>
+          <div style={{ borderTop: '1px solid var(--surface-border)', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div className="flex justify-between items-center text-muted">
+              <span>Subtotal</span>
+              <span>${total_bill.toFixed(2)}</span>
+            </div>
+            {appliedDiscount > 0 && (
+              <div className="flex justify-between items-center" style={{ color: 'var(--success-color)' }}>
+                <span>Coupon Discount (10%)</span>
+                <span>-${appliedDiscount.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="flex justify-between items-center" style={{ marginTop: '0.5rem' }}>
+              <span style={{ fontSize: '1.2rem', color: 'var(--text-color)' }}>Total Amount</span>
+              <span style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>${finalTotal.toFixed(2)}</span>
+            </div>
           </div>
         </div>
 
         {/* Payment Methods */}
         <div className="glass-card flex-col" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          {/* Coupon Section */}
+          <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '12px' }}>
+            <label className="text-muted" style={{ display: 'block', marginBottom: '0.5rem' }}>Have a Coupon Code?</label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input
+                type="text"
+                placeholder="Enter Code"
+                value={couponInput}
+                onChange={e => setCouponInput(e.target.value)}
+                style={{ flex: 1, padding: '0.5rem', fontSize: '1rem' }}
+                disabled={appliedDiscount > 0}
+              />
+              <button 
+                className="outline" 
+                onClick={handleApplyCoupon}
+                disabled={appliedDiscount > 0 || !couponInput}
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+
           <h2>Select Payment Method</h2>
           
           <div className="flex gap-4">
@@ -104,7 +184,7 @@ const PaymentPage = () => {
                 <label className="text-muted" style={{ display: 'block', marginBottom: '0.5rem' }}>Amount Tendered</label>
                 <input
                   type="number"
-                  min={total_bill}
+                  min={finalTotal}
                   step="0.01"
                   value={amountTendered}
                   onChange={e => setAmountTendered(e.target.value === '' ? '' : parseFloat(e.target.value))}

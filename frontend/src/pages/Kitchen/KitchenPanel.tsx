@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOrders, type FullOrder } from '../../store/OrderContext';
 import './KitchenPanel.css';
+import KitchenInventory from './KitchenInventory';
 
 const CHEFS = [
   { id: 1, name: 'Marco Rossi',  emoji: '🍳', role: 'Head Chef',       color: '#ff6b6b', glow: 'rgba(255,107,107,0.35)' },
@@ -181,12 +182,33 @@ const ChefSelection: React.FC<{ onSelect: (chef: typeof CHEFS[0]) => void }> = (
 const KitchenPanel: React.FC = () => {
   const { orders } = useOrders();
   const [selectedChef, setSelectedChef] = useState<typeof CHEFS[0] | null>(null);
+  const [activeTab, setActiveTab] = useState<'kds' | 'inventory'>('kds');
+  const [scarceCount, setScarceCount] = useState(0);
 
   // All active orders (not completed) visible to kitchen
   const activeOrders = orders.filter(o => o.status !== 'Completed');
   const pendingOrders  = activeOrders.filter(o => o.status === 'Pending');
   const cookingOrders  = activeOrders.filter(o => o.status === 'Cooking');
   const readyOrders    = activeOrders.filter(o => o.status === 'Ready');
+
+  useEffect(() => {
+    if (!selectedChef) return;
+    
+    const fetchScarceCount = async () => {
+      try {
+        const { getInventory } = await import('../../api');
+        const items = await getInventory();
+        const scarceItems = items.filter((i: any) => i.is_scarce);
+        setScarceCount(scarceItems.length);
+      } catch (err) {
+        console.error('Error fetching scarce count:', err);
+      }
+    };
+
+    fetchScarceCount();
+    const interval = setInterval(fetchScarceCount, 15000);
+    return () => clearInterval(interval);
+  }, [selectedChef, activeTab]);
 
   if (!selectedChef) {
     return <ChefSelection onSelect={setSelectedChef} />;
@@ -205,6 +227,45 @@ const KitchenPanel: React.FC = () => {
               <div className="active-chef-role">{selectedChef.role}</div>
             </div>
           </div>
+        </div>
+
+        {/* View Toggle Tabs */}
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <button 
+            className={activeTab === 'kds' ? '' : 'outline'} 
+            style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}
+            onClick={() => setActiveTab('kds')}
+          >
+            📋 KDS Board
+          </button>
+          <button 
+            className={activeTab === 'inventory' ? '' : 'outline'} 
+            style={{ 
+              padding: '0.5rem 1.2rem', 
+              fontSize: '0.85rem',
+              position: 'relative'
+            }}
+            onClick={() => setActiveTab('inventory')}
+          >
+            📦 Inventory Stock
+            {scarceCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                background: 'var(--accent-color)',
+                color: 'white',
+                fontSize: '0.7rem',
+                fontWeight: 'bold',
+                borderRadius: '999px',
+                padding: '2px 6px',
+                boxShadow: '0 0 8px rgba(255,107,107,0.5)',
+                animation: 'pulse-ready 2s ease-in-out infinite'
+              }}>
+                {scarceCount}
+              </span>
+            )}
+          </button>
         </div>
 
         <div className="kitchen-stats">
@@ -230,12 +291,16 @@ const KitchenPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* Kanban Board */}
-      <div className="kitchen-board">
-        <KitchenLane title="Pending"  icon="🕐" color="#339af0" orders={pendingOrders}  chefName={selectedChef.name} />
-        <KitchenLane title="Cooking"  icon="🔥" color="#fcc419" orders={cookingOrders}  chefName={selectedChef.name} />
-        <KitchenLane title="Ready"    icon="✅" color="#51cf66" orders={readyOrders}    chefName={selectedChef.name} />
-      </div>
+      {/* Main Tab Content */}
+      {activeTab === 'kds' ? (
+        <div className="kitchen-board">
+          <KitchenLane title="Pending"  icon="🕐" color="#339af0" orders={pendingOrders}  chefName={selectedChef.name} />
+          <KitchenLane title="Cooking"  icon="🔥" color="#fcc419" orders={cookingOrders}  chefName={selectedChef.name} />
+          <KitchenLane title="Ready"    icon="✅" color="#51cf66" orders={readyOrders}    chefName={selectedChef.name} />
+        </div>
+      ) : (
+        <KitchenInventory />
+      )}
     </div>
   );
 };

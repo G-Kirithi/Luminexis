@@ -13,12 +13,14 @@ interface FoodCatalogProps {
   onAddProduct: (product: Product) => void;
 }
 
-const CATEGORIES = ['All', 'Burger', 'Drinks', 'Wraps', 'Combo Meal'];
+
 
 const FoodCatalog: React.FC<FoodCatalogProps> = ({ products, onAddProduct }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
+  // Derive categories dynamically from products
+  const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
@@ -39,7 +41,7 @@ const FoodCatalog: React.FC<FoodCatalogProps> = ({ products, onAddProduct }) => 
       </div>
 
       <div className="flex gap-2" style={{ marginBottom: '1rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-        {CATEGORIES.map(cat => (
+        {categories.map(cat => (
           <button
             key={cat}
             className={activeCategory === cat ? '' : 'outline'}
