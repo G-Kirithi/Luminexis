@@ -724,22 +724,24 @@ const TopNav = () => {
       display: 'flex', 
       justifyContent: 'space-between', 
       alignItems: 'center', 
-      background: 'rgba(0,0,0,0.2)', 
-      borderBottom: '1px solid var(--surface-border)' 
+      background: '#2C1E16', 
+      borderBottom: '3px solid #D4A373',
+      boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+      zIndex: 100
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Franchise:</span>
-        <span style={{ fontWeight: 'bold', color: 'var(--primary-color)', textTransform: 'capitalize' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+        <span style={{ fontSize: '0.85rem', color: '#EAD6C0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Franchise Location:</span>
+        <span style={{ fontWeight: '800', color: '#F9E8D2', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '1.1rem' }}>
           {activeFranchise || 'None'}
         </span>
       </div>
       <div style={{ display: 'flex', gap: '1rem' }}>
-        <button onClick={handleSwitchFranchise} className="outline" style={{ padding: '0.4rem 1rem' }}>
-          🏢 Switch Franchise
+        <button onClick={handleSwitchFranchise} style={{ padding: '0.5rem 1.2rem', background: 'transparent', border: '1px solid #D4A373', color: '#D4A373', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, fontSize: '0.9rem' }}>
+          🏢 SWITCH FRANCHISE
         </button>
         <Link to="/">
-          <button className="outline" style={{ padding: '0.4rem 1rem' }}>
-            Logout / Switch User
+          <button style={{ padding: '0.5rem 1.2rem', background: '#D9480F', border: 'none', color: '#fff', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, fontSize: '0.9rem' }}>
+            LOGOUT / SWITCH USER
           </button>
         </Link>
       </div>

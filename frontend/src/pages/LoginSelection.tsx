@@ -30,33 +30,37 @@ const LoginSelection = () => {
       gap: '2rem'
     }}>
       <div style={{ textAlign: 'center' }}>
-        <h1 style={{ fontSize: '3rem', marginBottom: '0.5rem', background: '-webkit-linear-gradient(45deg, #339af0, #ff6b6b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          Luminexis
+        <h1 style={{ fontSize: '3rem', marginBottom: '0.5rem', fontFamily: 'var(--heading-font)', fontWeight: 600, color: 'var(--text-color)' }}>
+          Odoo Cafe POS
         </h1>
         <p className="text-muted">Select a panel to continue</p>
       </div>
 
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
         {[
-          { id: 'admin', title: 'Admin Panel', icon: '🛡️', color: 'var(--primary-color)' },
-          { id: 'pos', title: 'POS Terminal', icon: '💻', color: 'var(--success-color)' },
-          { id: 'kds', title: 'Kitchen Display', icon: '👨‍🍳', color: 'var(--warning-color)' }
+          { id: 'admin', title: 'Admin Panel', color: '#1864AB', bg: '/images/admin.png' },
+          { id: 'pos', title: 'POS Terminal', color: '#B88655', bg: '/images/pos.png' },
+          { id: 'kds', title: 'Kitchen Display', color: '#D9480F', bg: '/images/kds.png' }
         ].map(panel => (
           <div
             key={panel.id}
             className="glass-card"
             style={{
-              width: '200px',
-              height: '200px',
+              width: '260px',
+              height: '320px',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'flex-end',
               cursor: 'pointer',
               border: selectedPanel === panel.id ? `2px solid ${panel.color}` : '1px solid var(--surface-border)',
               transform: selectedPanel === panel.id ? 'translateY(-8px)' : 'none',
               boxShadow: selectedPanel === panel.id ? `0 12px 40px 0 ${panel.color}40` : 'var(--glass-shadow)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              backgroundImage: `linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.75) 30%, rgba(255,255,255,0.0) 80%), url(${panel.bg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              paddingBottom: '2rem'
             }}
             onClick={() => {
               setSelectedPanel(panel.id as any);
@@ -64,8 +68,18 @@ const LoginSelection = () => {
               setPassword('');
             }}
           >
-            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>{panel.icon}</div>
-            <h3 style={{ margin: 0, color: selectedPanel === panel.id ? panel.color : 'inherit' }}>{panel.title}</h3>
+            <h3 style={{ 
+              margin: 0, 
+              color: selectedPanel === panel.id ? panel.color : 'var(--text-color)', 
+              fontWeight: 800,
+              fontSize: '1.4rem',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontFamily: 'var(--font-family)',
+              marginBottom: '0.5rem'
+            }}>
+              {panel.title}
+            </h3>
           </div>
         ))}
       </div>

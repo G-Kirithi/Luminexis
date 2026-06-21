@@ -128,14 +128,13 @@ const FranchiseSelector = () => {
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <h1 style={{ 
           fontSize: '3.5rem', 
-          fontWeight: 800,
+          fontWeight: 600,
           margin: 0,
-          letterSpacing: '-1.5px',
-          background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)', 
-          WebkitBackgroundClip: 'text', 
-          WebkitTextFillColor: 'transparent' 
+          letterSpacing: '0px',
+          fontFamily: 'var(--heading-font)',
+          color: 'var(--text-color)'
         }}>
-          Luminexis POS
+          Odoo Cafe POS
         </h1>
         <p className="text-muted" style={{ fontSize: '1.1rem', marginTop: '0.5rem' }}>
           Multi-Franchise Unified Management System
@@ -196,7 +195,7 @@ const FranchiseSelector = () => {
                       padding: '0.8rem 1rem',
                       borderRadius: '8px',
                       border: '1px solid var(--surface-border)',
-                      background: 'rgba(0, 0, 0, 0.2)',
+                      background: 'rgba(255, 255, 255, 0.8)',
                       color: 'var(--text-color)',
                       fontSize: '1rem',
                       fontFamily: 'inherit',
@@ -205,7 +204,7 @@ const FranchiseSelector = () => {
                     }}
                   >
                     {franchises.map(f => (
-                      <option key={f.id} value={f.name} style={{ background: '#1a1f26', color: '#fff' }}>
+                      <option key={f.id} value={f.name} style={{ background: '#fff', color: '#000' }}>
                         {f.name.toUpperCase()}
                       </option>
                     ))}

@@ -4,9 +4,9 @@ import './KitchenPanel.css';
 import KitchenInventory from './KitchenInventory';
 
 const CHEFS = [
-  { id: 1, name: 'Marco Rossi',  emoji: '🍳', role: 'Head Chef',       color: '#ff6b6b', glow: 'rgba(255,107,107,0.35)' },
-  { id: 2, name: 'Aisha Khan',   emoji: '🔪', role: 'Sous Chef',        color: '#339af0', glow: 'rgba(51,154,240,0.35)' },
-  { id: 3, name: 'Raj Patel',    emoji: '👨‍🍳', role: 'Pastry & Grill',  color: '#51cf66', glow: 'rgba(81,207,102,0.35)' },
+  { id: 1, name: 'Marco Rossi',  emoji: '👨‍🍳', role: 'Head Chef',       color: '#D9480F', glow: 'rgba(217, 72, 15, 0.35)' },
+  { id: 2, name: 'Aisha Khan',   emoji: '👩‍🍳', role: 'Sous Chef',        color: '#B88655', glow: 'rgba(184, 134, 85, 0.35)' },
+  { id: 3, name: 'Raj Patel',    emoji: '🧑‍🍳', role: 'Pastry & Grill',  color: '#668BA4', glow: 'rgba(102, 139, 164, 0.35)' },
 ];
 
 const STATUS_CONFIG = {

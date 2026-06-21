@@ -110,34 +110,34 @@ const NewOrderPage = () => {
     <div style={{ display: 'flex', gap: '1rem', padding: '1rem', minHeight: '100%', boxSizing: 'border-box' }}>
       {/* Left Form & Catalog */}
       <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div className="glass-card">
-          <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-            <h2 style={{ margin: 0 }}>Customer Details</h2>
+        <div className="glass-card" style={{ background: '#FDFBF7', border: '2px solid #EAD6C0' }}>
+          <div className="flex justify-between items-center" style={{ marginBottom: '1.2rem' }}>
+            <h2 style={{ margin: 0, color: '#2C1E16', fontSize: '1.4rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Customer Details</h2>
             {selectedTable && (
-              <span style={{ background: 'var(--primary-color)', color: '#fff', padding: '0.4rem 1rem', borderRadius: '20px', fontWeight: 'bold' }}>
+              <span style={{ background: '#B88655', color: '#fff', padding: '0.4rem 1.2rem', borderRadius: '20px', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase' }}>
                 Table {selectedTable}
               </span>
             )}
           </div>
           <div style={{ display: 'flex', gap: '1rem' }}>
             <div style={{ flex: 1 }}>
-              <label className="text-muted" style={{ display: 'block', marginBottom: '0.5rem' }}>Phone Number *</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700, color: '#668BA4', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.5px' }}>Phone Number *</label>
               <input 
                 type="tel" 
                 placeholder="e.g. 555-0123" 
                 value={customerPhone}
                 onChange={e => setCustomerPhone(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box' }}
+                style={{ width: '100%', boxSizing: 'border-box', padding: '0.8rem 1rem', border: '2px solid #EAD6C0', borderRadius: '8px', fontSize: '1.05rem', fontWeight: 600, color: '#2C1E16' }}
               />
             </div>
             <div style={{ flex: 1 }}>
-              <label className="text-muted" style={{ display: 'block', marginBottom: '0.5rem' }}>Customer Name</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700, color: '#668BA4', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.5px' }}>Customer Name</label>
               <input 
                 type="text" 
                 placeholder="John Doe" 
                 value={customerName}
                 onChange={e => setCustomerName(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box' }}
+                style={{ width: '100%', boxSizing: 'border-box', padding: '0.8rem 1rem', border: '2px solid #EAD6C0', borderRadius: '8px', fontSize: '1.05rem', fontWeight: 600, color: '#2C1E16' }}
               />
             </div>
           </div>
@@ -147,43 +147,43 @@ const NewOrderPage = () => {
       </div>
 
       {/* Right Sidebar - Order Summary */}
-      <div className="glass-card flex-col" style={{ flex: 1, padding: '1rem', display: 'flex', flexDirection: 'column' }}>
-        <h2 style={{ marginBottom: '1rem', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.5rem' }}>Order Summary</h2>
+      <div className="glass-card flex-col" style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column', background: '#FDFBF7', border: '2px solid #EAD6C0' }}>
+        <h2 style={{ marginBottom: '1.2rem', borderBottom: '2px solid #EAD6C0', paddingBottom: '0.8rem', color: '#2C1E16', fontSize: '1.4rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Order Summary</h2>
         
-        <div style={{ flex: 1, overflowY: 'auto' }} className="flex-col gap-2">
+        <div style={{ flex: 1, overflowY: 'auto', paddingRight: '0.5rem' }} className="flex-col gap-2">
           {items.map(item => (
-            <div key={item.id} className="flex justify-between items-center" style={{ padding: '0.8rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px' }}>
-              <div className="flex-col" style={{ flex: 1 }}>
-                <span style={{ fontWeight: 'bold' }}>{item.name}</span>
-                <span className="text-muted" style={{ fontSize: '0.9rem' }}>${item.price.toFixed(2)}</span>
+            <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: '#fff', borderRadius: '12px', border: '1px solid #EAD6C0', boxShadow: '0 4px 10px rgba(0,0,0,0.03)', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '0.3rem', paddingRight: '1rem' }}>
+                <span style={{ fontWeight: 800, color: '#2C1E16', fontSize: '1.05rem', lineHeight: '1.2' }}>{item.name}</span>
+                <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#B88655' }}>${item.price.toFixed(2)}</span>
               </div>
               
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1" style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '20px', padding: '0.2rem' }}>
-                  <button className="outline" style={{ padding: '0.2rem 0.5rem', border: 'none', borderRadius: '50%' }} onClick={() => handleUpdateQty(item.id, -1)}>-</button>
-                  <span style={{ minWidth: '1.2rem', textAlign: 'center', fontWeight: 'bold' }}>{item.qty}</span>
-                  <button className="outline" style={{ padding: '0.2rem 0.5rem', border: 'none', borderRadius: '50%' }} onClick={() => handleUpdateQty(item.id, 1)}>+</button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#F5EFE6', borderRadius: '8px', padding: '0.3rem', border: '1px solid #EAD6C0' }}>
+                  <button style={{ padding: '0.2rem 0.6rem', border: 'none', background: '#fff', borderRadius: '6px', fontWeight: 800, color: '#D9480F', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }} onClick={() => handleUpdateQty(item.id, -1)}>-</button>
+                  <span style={{ minWidth: '1.5rem', textAlign: 'center', fontWeight: 800, color: '#2C1E16' }}>{item.qty}</span>
+                  <button style={{ padding: '0.2rem 0.6rem', border: 'none', background: '#fff', borderRadius: '6px', fontWeight: 800, color: '#00C853', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }} onClick={() => handleUpdateQty(item.id, 1)}>+</button>
                 </div>
-                <span style={{ fontWeight: 'bold', minWidth: '3.5rem', textAlign: 'right' }}>${(item.price * item.qty).toFixed(2)}</span>
-                <button className="danger outline" style={{ padding: '0.2rem 0.5rem', border: 'none' }} onClick={() => handleRemoveItem(item.id)}>🗑️</button>
+                <span style={{ fontWeight: 900, minWidth: '4.5rem', textAlign: 'right', color: '#D9480F', fontSize: '1.1rem' }}>${(item.price * item.qty).toFixed(2)}</span>
+                <button style={{ padding: '0.4rem 0.6rem', border: 'none', borderRadius: '8px', background: '#FFE3E3', color: '#FA5252', cursor: 'pointer', marginLeft: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleRemoveItem(item.id)}>🗑️</button>
               </div>
             </div>
           ))}
           {items.length === 0 && (
-            <div className="text-muted" style={{ textAlign: 'center', marginTop: '2rem' }}>No items added yet.</div>
+            <div style={{ textAlign: 'center', marginTop: '3rem', color: '#668BA4', fontWeight: 600, fontSize: '1.1rem' }}>No items added yet. Start tapping!</div>
           )}
         </div>
 
-        <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--surface-border)' }}>
-          <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-            <span style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>Total Bill</span>
-            <span style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>${totalBill.toFixed(2)}</span>
+        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '2px solid #EAD6C0' }}>
+          <div className="flex justify-between items-center" style={{ marginBottom: '1.5rem' }}>
+            <span style={{ fontSize: '1.2rem', color: '#668BA4', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Total Bill</span>
+            <span style={{ fontSize: '2.2rem', fontWeight: 900, color: '#D9480F' }}>${totalBill.toFixed(2)}</span>
           </div>
           <button 
-            style={{ width: '100%', padding: '1rem', fontSize: '1.2rem', background: 'var(--primary-color)' }}
+            style={{ width: '100%', padding: '1.2rem', fontSize: '1.2rem', background: '#2C1E16', color: '#F9E8D2', fontWeight: 800, border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 8px 20px rgba(44, 30, 22, 0.2)', textTransform: 'uppercase', letterSpacing: '1px' }}
             onClick={handleSubmit}
           >
-            Proceed to Payment (Enter)
+            Proceed to Payment
           </button>
         </div>
       </div>

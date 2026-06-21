@@ -402,8 +402,8 @@ const CustomerPage = () => {
     return (
       <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '1.5rem' }}>
         <div style={{ textAlign: 'center' }}>
-          <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '0.5rem', background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Luminexis
+          <h1 style={{ fontSize: '3rem', fontWeight: 600, fontFamily: 'var(--heading-font)', marginBottom: '0.5rem', color: 'var(--text-color)' }}>
+            Odoo Cafe POS
           </h1>
           <p className="text-muted" style={{ fontSize: '1.1rem' }}>Please select a franchise location to order or request support</p>
         </div>
@@ -522,7 +522,7 @@ const CustomerPage = () => {
                     padding: '0.8rem 1rem',
                     borderRadius: '8px',
                     border: '1px solid var(--surface-border)',
-                    background: 'rgba(0, 0, 0, 0.2)',
+                    background: 'rgba(255, 255, 255, 0.8)',
                     color: 'var(--text-color)',
                     fontFamily: 'var(--font-family)',
                     resize: 'vertical',
@@ -553,7 +553,7 @@ const CustomerPage = () => {
                         padding: '0.8rem 1rem',
                         borderRadius: '8px',
                         border: '1px solid var(--surface-border)',
-                        background: '#1a1d24',
+                        background: '#fff',
                         color: 'var(--text-color)',
                         outline: 'none'
                       }}
@@ -660,7 +660,7 @@ const CustomerPage = () => {
                   <div
                     key={t.id}
                     style={{
-                      background: 'rgba(0,0,0,0.2)',
+                      background: 'rgba(255,255,255,0.6)',
                       border: '1px solid var(--surface-border)',
                       borderRadius: '12px',
                       padding: '1.2rem',
@@ -757,7 +757,7 @@ const CustomerPage = () => {
             
             <div style={{ flex: 1, overflowY: 'auto' }} className="flex-col gap-2">
               {items.map(item => (
-                <div key={item.id} className="flex justify-between items-center" style={{ padding: '0.8rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px' }}>
+                <div key={item.id} className="flex justify-between items-center" style={{ padding: '0.8rem', background: 'rgba(255,255,255,0.6)', borderRadius: '8px' }}>
                   <div className="flex-col" style={{ flex: 1 }}>
                     <span style={{ fontWeight: 'bold' }}>{item.name}</span>
                     <span className="text-muted" style={{ fontSize: '0.9rem' }}>${item.price.toFixed(2)}</span>

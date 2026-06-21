@@ -1,19 +1,20 @@
 :root {
-  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  --bg-color: #0f1115;
-  --text-color: #f1f3f5;
-  --text-muted: #868e96;
-  --primary-color: #339af0;
-  --primary-hover: #228be6;
-  --secondary-color: #adb5bd;
-  --accent-color: #ff6b6b;
-  --accent-hover: #fa5252;
-  --success-color: #51cf66;
-  --warning-color: #fcc419;
+  --font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --heading-font: 'Playfair Display', 'Georgia', serif;
+  --bg-color: #F8F4EE;
+  --text-color: #2C1E16;
+  --text-muted: #8B7355;
+  --primary-color: #C19A6B;
+  --primary-hover: #A88154;
+  --secondary-color: #E8D8C8;
+  --accent-color: #D4A373;
+  --accent-hover: #C28D59;
+  --success-color: #6B8E23;
+  --warning-color: #DAA520;
   
-  --surface-bg: rgba(33, 37, 41, 0.6);
-  --surface-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  --surface-bg: rgba(255, 255, 255, 0.85);
+  --surface-border: rgba(193, 154, 107, 0.2);
+  --glass-shadow: 0 10px 40px 0 rgba(44, 30, 22, 0.05);
   --card-radius: 16px;
   
   --transition-speed: 0.3s;
@@ -26,8 +27,12 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: var(--bg-color);
-  background-image: radial-gradient(circle at 15% 50%, rgba(51, 154, 240, 0.1), transparent 25%),
-                    radial-gradient(circle at 85% 30%, rgba(255, 107, 107, 0.05), transparent 25%);
+  background-image: 
+    radial-gradient(circle at 15% 20%, #FFFFFF 0%, transparent 55%),
+    radial-gradient(circle at 85% 80%, #F5EFE6 0%, transparent 55%),
+    radial-gradient(circle at 80% 10%, #EAE0D5 0%, transparent 50%),
+    radial-gradient(circle at 20% 90%, #E3D5C5 0%, transparent 50%);
+  background-attachment: fixed;
   color: var(--text-color);
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
@@ -71,12 +76,12 @@ button {
   color: #fff;
   cursor: pointer;
   transition: all var(--transition-speed);
-  box-shadow: 0 4px 14px 0 rgba(51, 154, 240, 0.39);
+  box-shadow: 0 4px 14px 0 rgba(197, 130, 56, 0.39);
 }
 
 button:hover {
   background-color: var(--primary-hover);
-  box-shadow: 0 6px 20px rgba(51, 154, 240, 0.23);
+  box-shadow: 0 6px 20px rgba(197, 130, 56, 0.23);
   transform: translateY(-1px);
 }
 
@@ -91,7 +96,7 @@ button.outline {
   box-shadow: none;
 }
 button.outline:hover {
-  background-color: rgba(51, 154, 240, 0.1);
+  background-color: rgba(197, 130, 56, 0.1);
 }
 
 button.danger {
@@ -104,17 +109,18 @@ button.danger:hover {
 
 /* Base Typography */
 h1, h2, h3, h4, h5, h6 {
-  color: #fff;
+  font-family: var(--heading-font);
+  color: var(--text-color);
   margin-top: 0;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 input {
   padding: 0.8rem 1rem;
   border-radius: 8px;
   border: 1px solid var(--surface-border);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.8);
   color: var(--text-color);
   font-family: var(--font-family);
   transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
@@ -123,7 +129,7 @@ input {
 input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(51, 154, 240, 0.2);
+  box-shadow: 0 0 0 3px rgba(197, 130, 56, 0.2);
 }
 
 /* Utilities */
