@@ -11,6 +11,7 @@ import KitchenPanel from './pages/Kitchen/KitchenPanel';
 import CustomerPage from './pages/Customer/CustomerPage';
 import FranchiseSelector from './pages/FranchiseSelector';
 import SuperAdminPanel from './pages/SuperAdminPanel';
+import MenuManagement from './pages/POS/MenuManagement';
 import { OrderProvider, useOrders } from './store/OrderContext';
 import { getInventory, getComplaints, updateComplaintStatus } from './api';
 
@@ -802,6 +803,7 @@ function App() {
               <Route path="/pos" element={<PosDashboard />} />
               <Route path="/pos/new" element={<NewOrderPage />} />
               <Route path="/pos/payment" element={<PaymentPage />} />
+              <Route path="/pos/menu-management" element={<MenuManagement />} />
               
               <Route path="/kds" element={<KitchenPanel />} />
               <Route path="/customer" element={<CustomerPage />} />

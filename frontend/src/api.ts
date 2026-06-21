@@ -33,6 +33,7 @@ export const registerFranchise = (payload: { name: string; pin: string }) => api
 export const loginFranchise = (payload: { name: string; pin: string }) => api.post('/api/franchises/login', payload).then(res => res.data);
 export const getFranchises = () => api.get('/api/franchises').then(res => res.data);
 export const getFranchiseStats = () => api.get('/api/franchises/stats').then(res => res.data);
+export const getFranchiseAnalytics = (name: string, params: any) => api.get(`/api/franchises/${name}/analytics`, { params }).then(res => res.data);
 export const resetFranchiseDb = (name: string) => api.post(`/api/franchises/${name}/reset`).then(res => res.data);
 
 // --- Kitchen Inventory API Helpers ---
@@ -62,4 +63,8 @@ export const getComplaints = (customerPhone?: string) => {
 
 export const updateComplaintStatus = (id: number, status: string, amount?: number) => 
   api.put(`/api/complaints/${id}/status`, { refund_status: status, refund_amount: amount }).then(res => res.data);
+
+export const createProduct = (productData: any) => api.post('/api/products', productData).then(res => res.data);
+export const deleteProduct = (id: number) => api.delete(`/api/products/${id}`).then(res => res.data);
+export const getCategories = () => api.get('/api/categories').then(res => res.data);
 

@@ -1,7 +1,8 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOrders } from '../../store/OrderContext';
 
-const STATUS_STYLES: Record<string, { bg: string; color: string; icon: JSX.Element }> = {
+const STATUS_STYLES: Record<string, { bg: string; color: string; icon: React.ReactNode }> = {
   Pending:   { bg: 'rgba(34, 139, 230, 0.15)',  color: '#228BE6', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> },
   Cooking:   { bg: 'rgba(255, 140, 0, 0.15)',   color: '#FF8C00', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg> },
   Ready:     { bg: 'rgba(0, 200, 83, 0.15)',    color: '#00C853', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> },
@@ -41,12 +42,20 @@ const PosDashboard = () => {
           <h1 style={{ margin: 0, fontSize: '1.8rem' }}>POS Dashboard</h1>
           <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{orders.length} total orders</span>
         </div>
-        <button
-          onClick={() => navigate('/pos/new')}
-          style={{ padding: '0.8rem 2rem', fontSize: '1.05rem', background: 'var(--success-color)' }}
-        >
-          + New Walk-in Order
-        </button>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button
+            onClick={() => navigate('/pos/menu-management')}
+            style={{ padding: '0.8rem 1.5rem', fontSize: '1.05rem', background: '#D4A373', color: '#2C1E16', border: 'none', borderRadius: '8px', fontWeight: 800, cursor: 'pointer' }}
+          >
+            🍔 Manage Menu
+          </button>
+          <button
+            onClick={() => navigate('/pos/new')}
+            style={{ padding: '0.8rem 1.5rem', fontSize: '1.05rem', background: 'var(--success-color)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 800, cursor: 'pointer' }}
+          >
+            + New Walk-in Order
+          </button>
+        </div>
       </div>
 
       {/* Table Map */}

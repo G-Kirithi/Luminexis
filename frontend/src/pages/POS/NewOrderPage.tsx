@@ -37,7 +37,7 @@ const NewOrderPage = () => {
   useEffect(() => {
     getProducts()
       .then((data: any[]) => {
-        setProducts(data.map(p => ({
+        setProducts(data.filter(p => p.available_in_pos).map(p => ({
           id: p.id,
           name: p.name,
           category: p.category?.name || 'Other',
@@ -111,6 +111,13 @@ const NewOrderPage = () => {
       {/* Left Form & Catalog */}
       <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div className="glass-card" style={{ background: '#FDFBF7', border: '2px solid #EAD6C0' }}>
+          <button 
+            onClick={() => navigate('/pos')} 
+            className="outline" 
+            style={{ padding: '0.4rem 1rem', fontSize: '0.85rem', marginBottom: '1rem', background: 'transparent', border: '2px solid #D4A373', color: '#D4A373', borderRadius: '8px', fontWeight: 800, textTransform: 'uppercase', cursor: 'pointer', display: 'block' }}
+          >
+            ← Back to POS Dashboard
+          </button>
           <div className="flex justify-between items-center" style={{ marginBottom: '1.2rem' }}>
             <h2 style={{ margin: 0, color: '#2C1E16', fontSize: '1.4rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Customer Details</h2>
             {selectedTable && (
